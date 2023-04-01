@@ -1,5 +1,6 @@
 package com.example.dronesv2.repository;
 
+import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneState;
 import jakarta.persistence.EntityManager;
@@ -25,6 +26,14 @@ public class JpaDroneRepository implements DroneRepository{
     @Override
     @Transactional
     public Drone save(Drone drone) {
+        entityManager.persist(drone);
+        return drone;
+    }
+
+    @Override
+    @Transactional
+    public Drone save(DroneDTO droneDTO) {
+        Drone drone = new Drone(droneDTO.getSerialNumber(),droneDTO.getModel(),droneDTO.getWeightLimit(),droneDTO.getBatteryCapacity(),droneDTO.getState());
         entityManager.persist(drone);
         return drone;
     }

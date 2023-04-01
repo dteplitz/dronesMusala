@@ -1,17 +1,15 @@
 package com.example.dronesv2.service;
 
+import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneModel;
 import com.example.dronesv2.model.DroneState;
 import com.example.dronesv2.model.Medication;
-import com.example.dronesv2.repository.DroneRepository;
 import com.example.dronesv2.repository.JpaDroneRepository;
 import com.example.dronesv2.repository.JpaMedicationRepository;
-import com.example.dronesv2.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +93,16 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public Drone saveDrone (Drone drone) throws Exception {
+        Optional<Drone> droneActual = droneRepository.findBySerialNumber(drone.getSerialNumber());
+        if (droneActual.isPresent()) {
+            throw new Exception("Drone already created");
+        }
+        drone.setState(DroneState.LOADED);
+        return droneRepository.save(drone);
+    }
+
+    @Override
+    public Drone saveDrone (DroneDTO drone) throws Exception {
         Optional<Drone> droneActual = droneRepository.findBySerialNumber(drone.getSerialNumber());
         if (droneActual.isPresent()) {
             throw new Exception("Drone already created");

@@ -1,5 +1,6 @@
 package com.example.dronesv2.service;
 
+import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneModel;
 import com.example.dronesv2.model.DroneState;
@@ -21,6 +22,8 @@ public interface DroneService {
     Drone getDroneBySerialNumber(String droneSerialNumber) throws Exception;
 
     List<Drone> getDronesByState(DroneState droneState);
+
+    Drone saveDrone (DroneDTO drone) throws Exception;
 
     Drone saveDrone (Drone drone) throws Exception;
 

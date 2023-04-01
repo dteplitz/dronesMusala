@@ -1,5 +1,6 @@
 package com.example.dronesv2.repository;
 
+import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneState;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ public interface DroneRepository extends JpaRepository<Drone,Long> {
     List<Drone> findAll();
     void deleteById(Long id);
     void deleteBySerialNumber(String serialNumber);
+    Drone save(DroneDTO drone);
     Drone save(Drone drone);
     Optional<Drone> findBySerialNumber(String droneSerialNumber);
     List<Drone> findByState(DroneState state);
