@@ -3,6 +3,7 @@ package com.example.dronesv2.repository;
 import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneState;
+import com.example.dronesv2.model.Medication;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -27,6 +28,12 @@ public class JpaDroneRepository implements DroneRepository{
     @Transactional
     public Drone save(Drone drone) {
         entityManager.persist(drone);
+        return drone;
+    }
+
+    @Transactional
+    public Drone update(Drone drone) {
+        entityManager.merge(drone);
         return drone;
     }
 

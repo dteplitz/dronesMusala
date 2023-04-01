@@ -4,6 +4,7 @@ import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneModel;
 import com.example.dronesv2.model.DroneState;
+import com.example.dronesv2.model.Medication;
 
 import java.util.List;
 
@@ -32,4 +33,6 @@ public interface DroneService {
     void deleteDrone(String droneSerialNumber);
 
     Drone addMedicationToDrone(String medicationCode, String droneSerialNumber) throws Exception;
+
+    List<Medication> getLoadedMedications(String serialNumber) throws Exception;
 }

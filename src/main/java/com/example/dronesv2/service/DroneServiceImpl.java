@@ -129,13 +129,23 @@ public class DroneServiceImpl implements DroneService {
             Optional<Medication> optionalMedication = medicationRepository.findByCode(medicationCode);
             if (optionalMedication.isPresent()) {
                 optionalDrone.get().addMedication(optionalMedication.get());
-                return optionalDrone.get();
+                return droneRepository.update(optionalDrone.get());
             }
             else {
                 throw new Exception("Medication not found with code: " + medicationCode);
             }
         } else {
             throw new Exception("Drone not found with serial number: " + droneSerialNumber);
+        }
+    }
+
+    @Override
+    public List<Medication> getLoadedMedications(String serialNumber) throws Exception {
+        Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(serialNumber);
+        if (optionalDrone.isPresent()) {
+            return optionalDrone.get().getMedications();
+        } else {
+            throw new Exception("Drone not found with serial number: " + serialNumber);
         }
     }
 

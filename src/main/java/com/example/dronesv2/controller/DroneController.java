@@ -3,12 +3,15 @@ package com.example.dronesv2.controller;
 
 import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
+import com.example.dronesv2.model.Medication;
 import com.example.dronesv2.service.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -46,21 +49,17 @@ public class DroneController {
 
     }
 
-
-/*
-    @PutMapping("/{serialNumber}/load-medications")
-    public ResponseEntity<?> loadMedications(@PathVariable String serialNumber,
-                                             @RequestBody List<Medication> medications) throws DroneBatteryLowException, DroneNotFoundException, DroneCapacityExceededException {
-        Drone loadedDrone = droneService.loadDrone(serialNumber, medications);
-        return ResponseEntity.ok(loadedDrone);
-    }
-
     @GetMapping("/{serialNumber}/loaded-medications")
-    public ResponseEntity<?> getLoadedMedications(@PathVariable String serialNumber) throws DroneNotFoundException {
-        List<Medication> loadedMedications = droneService.getLoadedMedications(serialNumber);
-        return ResponseEntity.ok(loadedMedications);
+    public ResponseEntity<?> getLoadedMedications(@PathVariable String serialNumber) throws Exception {
+        try{
+            List<Medication> loadedMedications = droneService.getLoadedMedications(serialNumber);
+            return ResponseEntity.ok(loadedMedications);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
-
+/*
     @GetMapping("/available-for-loading")
     public ResponseEntity<?> getAvailableDronesForLoading() {
         List<Drone> availableDrones = droneService.getDronesByState(DroneState.LOADED);
