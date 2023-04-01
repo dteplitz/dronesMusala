@@ -3,7 +3,11 @@ package com.example.dronesv2.service;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneModel;
 import com.example.dronesv2.model.DroneState;
+import com.example.dronesv2.model.Medication;
 import com.example.dronesv2.repository.DroneRepository;
+import com.example.dronesv2.repository.JpaDroneRepository;
+import com.example.dronesv2.repository.JpaMedicationRepository;
+import com.example.dronesv2.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +18,13 @@ import java.util.Optional;
 @Service
 public class DroneServiceImpl implements DroneService {
 
-    private final DroneRepository droneRepository;
-    //private final MedicationRepository medicationRepository;
+    private final JpaDroneRepository droneRepository;
+    private final JpaMedicationRepository medicationRepository;
 
     @Autowired
-    public DroneServiceImpl(DroneRepository droneRepository/*, MedicationRepository medicationRepository*/) {
+    public DroneServiceImpl(JpaDroneRepository droneRepository, JpaMedicationRepository medicationRepository) {
         this.droneRepository = droneRepository;
-//        this.medicationRepository = medicationRepository;
+        this.medicationRepository = medicationRepository;
     }
 
     @Override
@@ -90,7 +94,11 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone saveDrone (Drone drone){
+    public Drone saveDrone (Drone drone) throws Exception {
+        Optional<Drone> droneActual = droneRepository.findBySerialNumber(drone.getSerialNumber());
+        if (droneActual.isPresent()) {
+            throw new Exception("Drone already created");
+        }
         drone.setState(DroneState.LOADED);
         return droneRepository.save(drone);
     }
@@ -103,6 +111,23 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public void deleteDrone(String droneSerialNumber) {
         droneRepository.deleteBySerialNumber(droneSerialNumber);
+    }
+
+    @Override
+    public Drone addMedicationToDrone(String medicationCode, String droneSerialNumber) throws Exception {
+        Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(droneSerialNumber);
+        if (optionalDrone.isPresent()) {
+            Optional<Medication> optionalMedication = medicationRepository.findByCode(medicationCode);
+            if (optionalMedication.isPresent()) {
+                optionalDrone.get().addMedication(optionalMedication.get());
+                return optionalDrone.get();
+            }
+            else {
+                throw new Exception("Medication not found with code: " + medicationCode);
+            }
+        } else {
+            throw new Exception("Drone not found with serial number: " + droneSerialNumber);
+        }
     }
 
     @Override

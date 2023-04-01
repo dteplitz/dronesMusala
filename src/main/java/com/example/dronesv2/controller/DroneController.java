@@ -21,10 +21,18 @@ public class DroneController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerDrone(@RequestBody Drone drone) {
+    public ResponseEntity<?> registerDrone(@RequestBody Drone drone) throws Exception {
+
         Drone registeredDrone = droneService.saveDrone(drone);
         return ResponseEntity.ok(registeredDrone);
     }
+
+    @PostMapping("/{medicationCode}/{droneSerialNumber}/add-medication")
+    public ResponseEntity<?> addMedicationToDrone(@PathVariable String medicationCode,@PathVariable String droneSerialNumber) throws Exception {
+        Drone drone = droneService.addMedicationToDrone(medicationCode, droneSerialNumber);
+        return ResponseEntity.ok(drone);
+    }
+
 /*
     @PutMapping("/{serialNumber}/load-medications")
     public ResponseEntity<?> loadMedications(@PathVariable String serialNumber,

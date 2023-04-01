@@ -12,15 +12,15 @@ public class Drone {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long id;
-    @Column
+    @Column(nullable = false, unique=true)
     private String serialNumber;
-    @Column
+    @Column(nullable = false)
     private DroneModel model;
-    @Column
+    @Column(nullable = false)
     private int weightLimit;
-    @Column
+    @Column(nullable = false)
     private int batteryCapacity;
-    @Column
+    @Column(nullable = false)
     private DroneState state;
     @ManyToMany()
     @JoinTable(

@@ -22,10 +22,11 @@ public interface DroneService {
 
     List<Drone> getDronesByState(DroneState droneState);
 
-    Drone saveDrone (Drone drone);
+    Drone saveDrone (Drone drone) throws Exception;
 
     List<Drone> getAllDrones();
 
     void deleteDrone(String droneSerialNumber);
 
+    Drone addMedicationToDrone(String medicationCode, String droneSerialNumber) throws Exception;
 }

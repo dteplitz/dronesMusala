@@ -11,11 +11,11 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long id;
-    @Column
+    @Column(nullable = false, unique=true)
     private String name;
-    @Column
+    @Column(nullable = false)
     private double weight;
-    @Column
+    @Column(nullable = false, unique=true)
     private String code;
     @Column
     private String image;
