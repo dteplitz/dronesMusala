@@ -102,12 +102,13 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone saveDrone (DroneDTO drone) throws Exception {
-        Optional<Drone> droneActual = droneRepository.findBySerialNumber(drone.getSerialNumber());
+    public Drone saveDrone (DroneDTO droneDTO) throws Exception {
+        Optional<Drone> droneActual = droneRepository.findBySerialNumber(droneDTO.getSerialNumber());
         if (droneActual.isPresent()) {
             throw new Exception("Drone already created");
         }
-        drone.setState(DroneState.LOADED);
+        Drone drone = new Drone(droneDTO.getSerialNumber(),droneDTO.getModel(),droneDTO.getWeightLimit(),droneDTO.getBatteryCapacity(),DroneState.LOADED);
+        checkDroneIsValid(drone);
         return droneRepository.save(drone);
     }
 
@@ -141,6 +142,29 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public List<Drone> getDronesByState(DroneState droneState){
         return droneRepository.findByState(droneState);
+    }
+
+    private void checkDroneIsValid(Drone drone) throws Exception {
+        if(!checkValidDroneSerialNumber(drone.getSerialNumber())){
+            throw new Exception("Serial number cannot be more than 100 characters");
+        }
+        if(!checkValidWeight(drone.getWeightLimit())){
+            throw new Exception("Weight can not be bigger than 500gr");
+        }
+        if(!checkValidBatteryCapacity(drone.getBatteryCapacity())){
+            throw new Exception("Battery capacity can not be bigger than 100%");
+        }
+    }
+
+    private boolean checkValidBatteryCapacity(int batteryCapacity) {
+        return batteryCapacity < 100;
+    }
+
+    private boolean checkValidWeight(int weight) {
+        return weight < 500;
+    }
+    private boolean checkValidDroneSerialNumber(String serialNumber) throws Exception {
+        return serialNumber.length() < 100;
     }
 
 

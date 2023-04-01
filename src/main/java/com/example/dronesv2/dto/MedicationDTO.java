@@ -1,13 +1,10 @@
 package com.example.dronesv2.dto;
 
-import com.example.dronesv2.model.DroneModel;
-import com.example.dronesv2.model.DroneState;
-
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class MedicationDTO {
     private Long id;
+
     @NotNull
     private String name;
     @NotNull

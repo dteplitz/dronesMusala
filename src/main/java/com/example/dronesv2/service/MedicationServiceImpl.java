@@ -26,6 +26,27 @@ public class MedicationServiceImpl implements MedicationService{
         if (medicationActual.isPresent()) {
             throw new Exception("Medication already created");
         }
-        return medicationRepository.save(medication);
+        Medication medicationSave = new Medication(medication.getName(),medication.getWeight(),medication.getCode(),medication.getImage());
+        checkMedicationIsValid(medicationSave);
+        return medicationRepository.save(medicationSave);
+    }
+
+    private void checkMedicationIsValid(Medication medication) throws Exception {
+        if(!checkValidName(medication.getName())){
+            throw new Exception("Name only can have letters, numbers, - and _");
+        }
+        if(!checkValidCode(medication.getCode())){
+            throw new Exception("Code can only have upper case letters, underscore and numbers");
+        }
+    }
+
+    private boolean checkValidCode(String code) {
+        String regex = "^[A-Z0-9_]*$";
+        return code.matches(regex);
+    }
+
+    private boolean checkValidName(String name) {
+        String regex = "^[a-zA-Z0-9_-]*$";
+        return name.matches(regex);
     }
 }

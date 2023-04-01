@@ -12,6 +12,5 @@ public interface MedicationRepository  extends JpaRepository<Medication,Long> {
     Optional<Medication> findByCode(String code);
     List<Medication> findAll();
     Medication save(Medication medication);
-    Medication save(MedicationDTO medication);
     void deleteByCode(String code);
 }

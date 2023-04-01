@@ -90,12 +90,6 @@ public class JpaMedicationRepository implements MedicationRepository {
         entityManager.persist(medication);
         return medication;
     }
-    @Override
-    public Medication save(MedicationDTO medicationDTO) {
-        Medication medication = new Medication(medicationDTO.getName(),medicationDTO.getWeight(),medicationDTO.getCode(),medicationDTO.getImage());
-        entityManager.persist(medication);
-        return medication;
-    }
 
     @Override
     public void deleteByCode(String code) {

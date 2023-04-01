@@ -30,13 +30,6 @@ public class JpaDroneRepository implements DroneRepository{
         return drone;
     }
 
-    @Override
-    @Transactional
-    public Drone save(DroneDTO droneDTO) {
-        Drone drone = new Drone(droneDTO.getSerialNumber(),droneDTO.getModel(),droneDTO.getWeightLimit(),droneDTO.getBatteryCapacity(),droneDTO.getState());
-        entityManager.persist(drone);
-        return drone;
-    }
 
     @Override
     public Optional<Drone> findBySerialNumber(String serialNumber) {

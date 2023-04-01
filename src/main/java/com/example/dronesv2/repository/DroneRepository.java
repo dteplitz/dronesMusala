@@ -13,7 +13,6 @@ public interface DroneRepository extends JpaRepository<Drone,Long> {
     List<Drone> findAll();
     void deleteById(Long id);
     void deleteBySerialNumber(String serialNumber);
-    Drone save(DroneDTO drone);
     Drone save(Drone drone);
     Optional<Drone> findBySerialNumber(String droneSerialNumber);
     List<Drone> findByState(DroneState state);
