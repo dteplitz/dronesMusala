@@ -57,5 +57,4 @@ public class Medication {
         return id;
     }
 
-    // other methods
 }

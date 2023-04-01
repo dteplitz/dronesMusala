@@ -95,7 +95,7 @@ public class Drone {
 
     public void addMedication(Medication medication) throws Exception {
         if (medications.size() >= getWeightLimit()) {
-            throw new Exception("Drone capacity exceeded: " + getWeightLimit());
+            throw new Exception("Drone capacity exceeded");
         }
         medications.add(medication);
     }
