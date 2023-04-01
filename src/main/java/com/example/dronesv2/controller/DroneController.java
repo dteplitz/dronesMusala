@@ -63,7 +63,7 @@ public class DroneController {
 
     @GetMapping("/available-for-loading")
     public ResponseEntity<?> getAvailableDronesForLoading() {
-        List<Drone> availableDrones = droneService.getDronesByState(DroneState.LOADED);
+        List<Drone> availableDrones = droneService.getDronesByState(DroneState.IDLE);
         return ResponseEntity.ok(availableDrones);
     }
 /*

@@ -128,6 +128,9 @@ public class DroneServiceImpl implements DroneService {
         if (optionalDrone.isPresent()) {
             Optional<Medication> optionalMedication = medicationRepository.findByCode(medicationCode);
             if (optionalMedication.isPresent()) {
+                if(!checkCanAddMedication(optionalDrone.get(),optionalMedication.get())){
+                    throw new Exception("Drone cannot carry that more weight");
+                }
                 optionalDrone.get().addMedication(optionalMedication.get());
                 return droneRepository.update(optionalDrone.get());
             }
@@ -137,6 +140,10 @@ public class DroneServiceImpl implements DroneService {
         } else {
             throw new Exception("Drone not found with serial number: " + droneSerialNumber);
         }
+    }
+
+    private boolean checkCanAddMedication(Drone drone, Medication medication) {
+        return drone.getWeightLimit() > drone.getActualWeight() + medication.getWeight();
     }
 
     @Override

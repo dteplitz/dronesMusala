@@ -113,4 +113,11 @@ public class Drone {
     }
 
 
+    public double getActualWeight() {
+        if(medications == null)
+            return 0;
+        return medications.stream()
+                .mapToDouble(m -> m.getWeight())
+                .sum();
+    }
 }
