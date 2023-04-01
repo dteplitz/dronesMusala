@@ -25,7 +25,7 @@ public class JpaDroneRepository implements DroneRepository{
     @Override
     @Transactional
     public Drone save(Drone drone) {
-        entityManager. persist(drone);
+        entityManager.persist(drone);
         return drone;
     }
 
