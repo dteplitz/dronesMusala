@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +22,11 @@ public class JpaDroneRepository implements DroneRepository{
     private EntityManager entityManager;
 
     @Override
-    @Transactional
     public Drone save(Drone drone) {
         entityManager.persist(drone);
         return drone;
     }
 
-    @Transactional
     public Drone update(Drone drone) {
         entityManager.merge(drone);
         return drone;
@@ -104,7 +101,7 @@ public class JpaDroneRepository implements DroneRepository{
     @Override
     public void deleteBySerialNumber(String serialNumber) {
         Optional<Drone> droneOptional = findBySerialNumber(serialNumber);
-        droneOptional.ifPresent(drone -> entityManager.remove(drone));
+        droneOptional.ifPresent(drone -> entityManager. remove(drone));
     }
 
     @Override

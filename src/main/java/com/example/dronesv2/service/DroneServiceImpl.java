@@ -8,6 +8,7 @@ import com.example.dronesv2.repository.JpaDroneRepository;
 import com.example.dronesv2.repository.JpaMedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class DroneServiceImpl implements DroneService {
         }
     }
 
+    @Transactional
     @Override
     public Drone saveDrone (DroneDTO droneDTO) throws Exception {
         Optional<Drone> droneActual = droneRepository.findBySerialNumber(droneDTO.getSerialNumber());
@@ -58,11 +60,13 @@ public class DroneServiceImpl implements DroneService {
         return droneRepository.save(drone);
     }
 
+    @Transactional
     @Override
     public void deleteDrone(String droneSerialNumber) {
         droneRepository.deleteBySerialNumber(droneSerialNumber);
     }
 
+    @Transactional
     @Override
     public Drone updateDrone(DroneDTO droneDTO) throws Exception {
         Optional<Drone> droneActual = droneRepository.findBySerialNumber(droneDTO.getSerialNumber());
@@ -79,6 +83,7 @@ public class DroneServiceImpl implements DroneService {
         return droneRepository.update(drone);
     }
 
+    @Transactional
     @Override
     public Drone addMedicationToDrone(String medicationCode, String droneSerialNumber) throws Exception {
         Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(droneSerialNumber);
@@ -116,6 +121,7 @@ public class DroneServiceImpl implements DroneService {
         }
     }
 
+    @Transactional
     @Override
     public Drone updateDroneState(String droneSerialNumber, DroneState newState) throws Exception {
         Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(droneSerialNumber);

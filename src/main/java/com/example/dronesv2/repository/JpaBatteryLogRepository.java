@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +78,6 @@ public class JpaBatteryLogRepository implements BatteryLogRepository{
 
     }
 
-    @Transactional
     @Override
     public BatteryLog save(BatteryLog batteryLog) {
         entityManager.persist(batteryLog);

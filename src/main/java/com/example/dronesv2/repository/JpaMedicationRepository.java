@@ -95,7 +95,6 @@ public class JpaMedicationRepository implements MedicationRepository {
         medicationOptional.ifPresent(medication -> entityManager.remove(medication));
     }
 
-    @Override
     public Medication update(Medication medication) {
         entityManager.merge(medication);
         return medication;

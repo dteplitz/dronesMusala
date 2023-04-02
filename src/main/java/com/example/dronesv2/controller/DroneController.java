@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/drones")
+@RequestMapping(value="/drones", produces = "application/json")
 public class DroneController {
 
     private final DroneService droneService;
@@ -119,7 +119,7 @@ public class DroneController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    @PutMapping("/{droneSerialNumber/{newState}")
+    @PutMapping("/{droneSerialNumber}/{newState}")
     public ResponseEntity<?> updateDroneState(@PathVariable String droneSerialNumber,@PathVariable DroneState newState) {
         try{
             Drone registeredDrone = droneService.updateDroneState(droneSerialNumber,newState);

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/batteryLogs")
+@RequestMapping(value="/batteryLogs", produces = "application/json")
 public class BatteryLogController {
     private final BatteryCheckingService batteryCheckingService;
 

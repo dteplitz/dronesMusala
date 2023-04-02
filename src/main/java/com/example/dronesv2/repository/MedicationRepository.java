@@ -11,5 +11,4 @@ public interface MedicationRepository  extends JpaRepository<Medication,Long> {
     List<Medication> findAll();
     Medication save(Medication medication);
     void deleteByCode(String code);
-    Medication update(Medication medication);
 }

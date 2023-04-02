@@ -7,6 +7,7 @@ import com.example.dronesv2.repository.JpaDroneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,6 +46,7 @@ public class BatteryCheckingServiceImpl implements BatteryCheckingService{
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void deleteBatteryLog(Long batteryLogID) {
         batteryLogRepository.deleteById(batteryLogID);

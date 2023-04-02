@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/medications")
+@RequestMapping(value="/medications", produces = "application/json")
 public class MedicationController {
     private final MedicationService medicationService;
 

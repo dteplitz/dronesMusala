@@ -1,11 +1,11 @@
 package com.example.dronesv2.service;
 
 import com.example.dronesv2.dto.MedicationDTO;
-import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.Medication;
-import com.example.dronesv2.repository.MedicationRepository;
+import com.example.dronesv2.repository.JpaMedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -13,13 +13,14 @@ import java.util.Optional;
 
 @Service
 public class MedicationServiceImpl implements MedicationService{
-    private final MedicationRepository medicationRepository;
+    private final JpaMedicationRepository medicationRepository;
 
     @Autowired
-    public MedicationServiceImpl(MedicationRepository medicationRepository) {
+    public MedicationServiceImpl(JpaMedicationRepository medicationRepository) {
         this.medicationRepository = medicationRepository;
     }
 
+    @Transactional
     @Override
     public Medication saveMedication(MedicationDTO medication) throws Exception {
         Optional<Medication> medicationActual = medicationRepository.findByCode(medication.getCode());
@@ -40,6 +41,7 @@ public class MedicationServiceImpl implements MedicationService{
         throw new Exception("Couldn't find medication");
     }
 
+    @Transactional
     @Override
     public Medication updateMedication(MedicationDTO medicationDTO) throws Exception {
         Optional<Medication> medicationActual = medicationRepository.findByCode(medicationDTO.getCode());
@@ -55,6 +57,7 @@ public class MedicationServiceImpl implements MedicationService{
         return medicationRepository.update(medication);
     }
 
+    @Transactional
     @Override
     public void deleteMedication(String medicationCode) throws Exception {
         medicationRepository.deleteByCode(medicationCode);
