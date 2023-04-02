@@ -28,4 +28,8 @@ public interface DroneService {
     List<Medication> getLoadedMedications(String serialNumber) throws Exception;
 
     Drone updateDroneState(String droneSerialNumber, DroneState newState) throws Exception;
+
+    void deleteMedicationFromDrone(String serialNumber, String medicationCode) throws Exception;
+
+    void deleteAllMedicationFromDrone(String serialNumber) throws Exception;
 }

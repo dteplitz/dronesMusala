@@ -129,4 +129,26 @@ public class DroneController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    @DeleteMapping("/{serialNumber}/{medicationCode}")
+    public ResponseEntity<?> deleteMedicationFromDrone(@PathVariable String serialNumber,@PathVariable String  medicationCode) {
+        try{
+            droneService.deleteMedicationFromDrone(serialNumber,medicationCode);
+            return ResponseEntity.ok("drone deleted");
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{serialNumber}/medications")
+    public ResponseEntity<?> deleteAllMedicationsFromDrone(@PathVariable String serialNumber) {
+        try{
+            droneService.deleteAllMedicationFromDrone(serialNumber);
+            return ResponseEntity.ok("drone deleted");
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }

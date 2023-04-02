@@ -136,6 +136,36 @@ public class DroneServiceImpl implements DroneService {
         }
     }
 
+    @Transactional
+    @Override
+    public void deleteMedicationFromDrone(String serialNumber, String medicationCode) throws Exception {
+        Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(serialNumber);
+        Optional<Medication> optionalMedication = medicationRepository.findByCode((medicationCode));
+        if (!optionalDrone.isPresent()) {
+            throw new Exception("Drone not found");
+        }
+        if (!optionalMedication.isPresent()) {
+            throw new Exception("Drone not found");
+        }
+        Drone drone = optionalDrone.get();
+        drone.removeMedication(optionalMedication.get());
+        droneRepository.update(drone);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllMedicationFromDrone(String serialNumber) throws Exception {
+        Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(serialNumber);
+        if (!optionalDrone.isPresent()) {
+            throw new Exception("Drone not found");
+        }
+        Drone drone = optionalDrone.get();
+        for(Medication medication: drone.getMedications()){
+            drone.removeMedication(medication);
+        }
+        droneRepository.update(drone);
+    }
+
     @Override
     public List<Drone> getDronesByState(DroneState droneState){
         return droneRepository.findByState(droneState);

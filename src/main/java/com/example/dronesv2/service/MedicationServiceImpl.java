@@ -1,7 +1,9 @@
 package com.example.dronesv2.service;
 
 import com.example.dronesv2.dto.MedicationDTO;
+import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.Medication;
+import com.example.dronesv2.repository.JpaDroneRepository;
 import com.example.dronesv2.repository.JpaMedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.Optional;
 @Service
 public class MedicationServiceImpl implements MedicationService{
     private final JpaMedicationRepository medicationRepository;
+    private final JpaDroneRepository droneRepository;
 
     @Autowired
-    public MedicationServiceImpl(JpaMedicationRepository medicationRepository) {
+    public MedicationServiceImpl(JpaMedicationRepository medicationRepository, JpaDroneRepository droneRepository) {
         this.medicationRepository = medicationRepository;
+        this.droneRepository = droneRepository;
     }
 
     @Transactional
@@ -60,6 +64,18 @@ public class MedicationServiceImpl implements MedicationService{
     @Transactional
     @Override
     public void deleteMedication(String medicationCode) throws Exception {
+        List<Drone> drones = droneRepository.findAll();
+        Optional<Medication> medicationOptional = medicationRepository.findByCode(medicationCode);
+        if(!medicationOptional.isPresent()){
+            throw new Exception("Medication not found");
+        }
+        Medication medication = medicationOptional.get();
+        for(Drone drone: drones){
+            List<Medication> medications = drone.getMedications();
+            if(medications.contains(medication)){
+                throw new Exception("Medication used in "+drone.getSerialNumber()+". To delete first remove it from the drone.");
+            }
+        }
         medicationRepository.deleteByCode(medicationCode);
     }
 
