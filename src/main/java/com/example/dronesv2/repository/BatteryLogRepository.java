@@ -1,7 +1,6 @@
 package com.example.dronesv2.repository;
 
 import com.example.dronesv2.model.BatteryLog;
-import com.example.dronesv2.model.Drone;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

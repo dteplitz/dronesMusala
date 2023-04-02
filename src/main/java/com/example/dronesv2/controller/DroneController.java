@@ -26,7 +26,7 @@ public class DroneController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerDrone(@RequestBody DroneDTO drone) {
+    public ResponseEntity<?> newDrone(@RequestBody DroneDTO drone) {
         try{
             Drone registeredDrone = droneService.saveDrone(drone);
             return ResponseEntity.ok(registeredDrone);
@@ -79,6 +79,54 @@ public class DroneController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-    //ToDo: change state when loading, set state of drone, another one to lower battery and charge battery
-    //put de drones y medicaciones
+    @GetMapping("/{serialNumber}")
+    public ResponseEntity<?> getDroneBySerialNumber(@PathVariable String serialNumber) {
+        try{
+            Drone drone = droneService.getDroneBySerialNumber(serialNumber);
+            return ResponseEntity.ok(drone);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @PutMapping()
+    public ResponseEntity<?> updateDrone(@RequestBody DroneDTO drone) {
+        try{
+            Drone registeredDrone = droneService.updateDrone(drone);
+            return ResponseEntity.ok(registeredDrone);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/{serialNumber}")
+    public ResponseEntity<?> deleteDrone(@PathVariable String serialNumber) {
+        try{
+            droneService.deleteDrone(serialNumber);
+            return ResponseEntity.ok("drone deleted");
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllDrones() {
+        try{
+            List<Drone> drones = droneService.getAvailableDrones();
+            return ResponseEntity.ok(drones);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @PutMapping("/{droneSerialNumber/{newState}")
+    public ResponseEntity<?> updateDroneState(@PathVariable String droneSerialNumber,@PathVariable DroneState newState) {
+        try{
+            Drone registeredDrone = droneService.updateDroneState(droneSerialNumber,newState);
+            return ResponseEntity.ok(registeredDrone);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

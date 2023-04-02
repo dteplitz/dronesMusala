@@ -1,9 +1,7 @@
 package com.example.dronesv2.repository;
 
-import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.DroneState;
-import com.example.dronesv2.model.Medication;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

@@ -1,7 +1,5 @@
 package com.example.dronesv2.repository;
 
-import com.example.dronesv2.dto.MedicationDTO;
-import com.example.dronesv2.model.Drone;
 import com.example.dronesv2.model.Medication;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -95,6 +93,12 @@ public class JpaMedicationRepository implements MedicationRepository {
     public void deleteByCode(String code) {
         Optional<Medication> medicationOptional = findByCode(code);
         medicationOptional.ifPresent(medication -> entityManager.remove(medication));
+    }
+
+    @Override
+    public Medication update(Medication medication) {
+        entityManager.merge(medication);
+        return medication;
     }
 
     @Override

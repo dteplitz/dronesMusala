@@ -2,13 +2,13 @@ package com.example.dronesv2.service;
 
 import com.example.dronesv2.dto.MedicationDTO;
 import com.example.dronesv2.model.Drone;
-import com.example.dronesv2.model.DroneState;
 import com.example.dronesv2.model.Medication;
-import com.example.dronesv2.repository.DroneRepository;
 import com.example.dronesv2.repository.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +29,40 @@ public class MedicationServiceImpl implements MedicationService{
         Medication medicationSave = new Medication(medication.getName(),medication.getWeight(),medication.getCode(),medication.getImage());
         checkMedicationIsValid(medicationSave);
         return medicationRepository.save(medicationSave);
+    }
+
+    @Override
+    public Medication getMedication(String medicationCode) throws Exception {
+        Optional<Medication> medication = medicationRepository.findByCode(medicationCode);
+        if(medication.isPresent()){
+            return medication.get();
+        }
+        throw new Exception("Couldn't find medication");
+    }
+
+    @Override
+    public Medication updateMedication(MedicationDTO medicationDTO) throws Exception {
+        Optional<Medication> medicationActual = medicationRepository.findByCode(medicationDTO.getCode());
+        if (!medicationActual.isPresent()) {
+            throw new Exception("Medication not found");
+        }
+        Medication medication = medicationActual.get();
+        medication.setImage(medicationDTO.getImage());
+        medication.setWeight(medicationDTO.getWeight());
+        medication.setName(medicationDTO.getName());
+
+        checkMedicationIsValid(medication);
+        return medicationRepository.update(medication);
+    }
+
+    @Override
+    public void deleteMedication(String medicationCode) throws Exception {
+        medicationRepository.deleteByCode(medicationCode);
+    }
+
+    @Override
+    public List<Medication> getAllMedications() {
+        return medicationRepository.findAll();
     }
 
     private void checkMedicationIsValid(Medication medication) throws Exception {

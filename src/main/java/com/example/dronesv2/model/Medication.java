@@ -36,9 +36,16 @@ public class Medication {
     public String getName() {
         return name;
     }
+    public void setName(String name) {
+        this.name = name;
+    }
+
 
     public double getWeight() {
         return weight;
+    }
+    public void setWeight(double weight){
+        this.weight = weight;
     }
 
     public String getCode() {
@@ -47,6 +54,9 @@ public class Medication {
 
     public String getImage() {
         return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setId(Long id) {

@@ -22,7 +22,7 @@ public class BatteryCheckingServiceImpl implements BatteryCheckingService{
         this.batteryLogRepository = batteryLogRepository;
     }
 
-    @Scheduled(fixedDelay = 6000)
+    @Scheduled(fixedDelay = 60000)
     @Override
     public void checkBatteryLevels() {
         List<Drone> drones = droneRepository.findAll();
@@ -43,6 +43,11 @@ public class BatteryCheckingServiceImpl implements BatteryCheckingService{
         return batteryLogRepository.findAll().stream()
                 .filter(b -> b.getTimestamp().isAfter(from) && b.getTimestamp().isBefore(to))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteBatteryLog(Long batteryLogID) {
+        batteryLogRepository.deleteById(batteryLogID);
     }
 
     private void logBatteryLevel(Drone drone) {

@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -23,7 +21,7 @@ public class BatteryLogController {
     }
 
     @GetMapping("{dateFrom}/{dateTo}/all")
-    public ResponseEntity<?> registerMedication(@PathVariable LocalDateTime dateFrom, @PathVariable LocalDateTime dateTo) {
+    public ResponseEntity<?> getAllBatteryLogs(@PathVariable LocalDateTime dateFrom, @PathVariable LocalDateTime dateTo) {
         try{
             List<BatteryLog> batteryLogs = batteryCheckingService.getBatteryLogs(dateFrom,dateTo);
             return ResponseEntity.ok(batteryLogs);
@@ -33,10 +31,21 @@ public class BatteryLogController {
         }
     }
     @GetMapping("{dateFrom}/{dateTo}/{droneSerialNumber}")
-    public ResponseEntity<?> registerMedication(@PathVariable LocalDateTime dateFrom, @PathVariable LocalDateTime dateTo, @PathVariable String droneSerialNumber) {
+    public ResponseEntity<?> getBatteryLogs(@PathVariable LocalDateTime dateFrom, @PathVariable LocalDateTime dateTo, @PathVariable String droneSerialNumber) {
         try{
             List<BatteryLog> batteryLogs = batteryCheckingService.getBatteryLogs(droneSerialNumber,dateFrom,dateTo);
             return ResponseEntity.ok(batteryLogs);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{batteryLogID}")
+    public ResponseEntity<?> deleteBatteryLog(@PathVariable Long batteryLogID) {
+        try{
+            batteryCheckingService.deleteBatteryLog(batteryLogID);
+            return ResponseEntity.ok("Log deleted");
         }
         catch (Exception e){
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

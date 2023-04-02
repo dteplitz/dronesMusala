@@ -2,7 +2,6 @@ package com.example.dronesv2.service;
 
 import com.example.dronesv2.dto.DroneDTO;
 import com.example.dronesv2.model.Drone;
-import com.example.dronesv2.model.DroneModel;
 import com.example.dronesv2.model.DroneState;
 import com.example.dronesv2.model.Medication;
 import com.example.dronesv2.repository.JpaDroneRepository;
@@ -24,49 +23,6 @@ public class DroneServiceImpl implements DroneService {
         this.droneRepository = droneRepository;
         this.medicationRepository = medicationRepository;
     }
-
-    @Override
-    public Drone registerDrone(String serialNumber, DroneModel model, int weightLimit, int batteryCapacity) {
-        // Implement the logic for registering a drone here
-        Drone drone = new Drone(serialNumber, model, weightLimit, batteryCapacity,DroneState.IDLE/*, new ArrayList<Medication>()*/);
-        return droneRepository.save(drone);
-    }
-
-    @Override
-    public Drone loadDrone(String serialNumber/*, List<Medication> medications*/) throws Exception {
-        Drone drone = droneRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(() -> new Exception("Drone not found with serialNumber: " + serialNumber));
-
-        if (drone.getState() != DroneState.IDLE) {
-            throw new IllegalStateException("Drone is not in IDLE state, it cannot be loaded.");
-        }
-
-        /*double totalWeight = medications.stream().mapToDouble(Medication::getWeight).sum();
-        if (totalWeight > drone.getWeightLimit()) {
-            throw new DroneCapacityExceededException("Drone cannot be loaded with total weight more than " + drone.getWeightLimit() + "g.");
-        }
-
-        int batteryLevel = drone.getBatteryCapacity();
-        if (batteryLevel < 25) {
-            throw new DroneBatteryLowException("Drone battery level is " + batteryLevel + "%. It should be charged before loading.");
-        }
-
-        drone.addMedications(medications);*/
-        drone.setState(DroneState.LOADING);
-        return saveDrone(drone);
-    }
-
-    /*@Override
-    public List<Medication> getLoadedMedications(String serialNumber) throws DroneNotFoundException {
-        Drone drone = droneRepository.findBySerialNumber(serialNumber)
-                .orElseThrow(() -> new DroneNotFoundException("Drone not found with serialNumber: " + serialNumber));
-
-        if (drone.getState() != DroneState.LOADING && drone.getState() != DroneState.LOADED) {
-            throw new IllegalStateException("Drone is not in LOADING or LOADED state, it cannot have loaded medications.");
-        }
-
-        return drone.getMedications();
-    }*/
 
     @Override
     public List<Drone> getAvailableDrones() {
@@ -92,34 +48,35 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Drone saveDrone (Drone drone) throws Exception {
-        Optional<Drone> droneActual = droneRepository.findBySerialNumber(drone.getSerialNumber());
-        if (droneActual.isPresent()) {
-            throw new Exception("Drone already created");
-        }
-        drone.setState(DroneState.LOADED);
-        return droneRepository.save(drone);
-    }
-
-    @Override
     public Drone saveDrone (DroneDTO droneDTO) throws Exception {
         Optional<Drone> droneActual = droneRepository.findBySerialNumber(droneDTO.getSerialNumber());
         if (droneActual.isPresent()) {
             throw new Exception("Drone already created");
         }
-        Drone drone = new Drone(droneDTO.getSerialNumber(),droneDTO.getModel(),droneDTO.getWeightLimit(),droneDTO.getBatteryCapacity(),DroneState.LOADED);
+        Drone drone = new Drone(droneDTO.getSerialNumber(),droneDTO.getModel(),droneDTO.getWeightLimit(),droneDTO.getBatteryCapacity(),DroneState.IDLE);
         checkDroneIsValid(drone);
         return droneRepository.save(drone);
     }
 
     @Override
-    public List<Drone> getAllDrones() {
-        return droneRepository.findAll();
+    public void deleteDrone(String droneSerialNumber) {
+        droneRepository.deleteBySerialNumber(droneSerialNumber);
     }
 
     @Override
-    public void deleteDrone(String droneSerialNumber) {
-        droneRepository.deleteBySerialNumber(droneSerialNumber);
+    public Drone updateDrone(DroneDTO droneDTO) throws Exception {
+        Optional<Drone> droneActual = droneRepository.findBySerialNumber(droneDTO.getSerialNumber());
+        if (!droneActual.isPresent()) {
+            throw new Exception("Drone not found");
+        }
+        Drone drone = droneActual.get();
+        drone.setState(droneDTO.getState());
+        drone.setModel(droneDTO.getModel());
+        drone.setWeightLimit(droneDTO.getWeightLimit());
+        drone.setBatteryCapacity(droneDTO.getBatteryCapacity());
+
+        checkDroneIsValid(drone);
+        return droneRepository.update(drone);
     }
 
     @Override
@@ -130,6 +87,9 @@ public class DroneServiceImpl implements DroneService {
             if (optionalMedication.isPresent()) {
                 if(!checkCanAddMedication(optionalDrone.get(),optionalMedication.get())){
                     throw new Exception("Drone cannot carry that more weight");
+                }
+                if(optionalDrone.get().getState() != DroneState.LOADING){
+                    throw new Exception("Cannot add meditacion if status isnt LOADING");
                 }
                 optionalDrone.get().addMedication(optionalMedication.get());
                 return droneRepository.update(optionalDrone.get());
@@ -153,6 +113,20 @@ public class DroneServiceImpl implements DroneService {
             return optionalDrone.get().getMedications();
         } else {
             throw new Exception("Drone not found with serial number: " + serialNumber);
+        }
+    }
+
+    @Override
+    public Drone updateDroneState(String droneSerialNumber, DroneState newState) throws Exception {
+        Optional<Drone> optionalDrone = droneRepository.findBySerialNumber(droneSerialNumber);
+        if (optionalDrone.isPresent()) {
+            Drone drone = optionalDrone.get();
+            if (newState == DroneState.LOADING && drone.getBatteryCapacity() < 25){
+                throw new Exception("Cannot set to Loading if battery is below 25%");
+            }
+            return drone;
+        } else {
+            throw new Exception("Drone not found with serial number: " + droneSerialNumber);
         }
     }
 
