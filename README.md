@@ -14,6 +14,7 @@ To run this project, you will need to have Java 17 and Spring Boot installed on 
 <br>
 Clone the repository and navigate to the root directory of the project. Run the following command to start the application:
 <br>
+./mvn install <br>
 ./mvnw spring-boot:run
 <br>
 The application will start on http://localhost:8080.
