@@ -18,7 +18,7 @@ public interface DroneService {
 
     List<Drone> getAvailableDrones();
 
-    double getDroneBatteryLevel(String serialNumber) throws Exception;
+    int getDroneBatteryLevel(String serialNumber) throws Exception;
 
     Drone getDroneBySerialNumber(String droneSerialNumber) throws Exception;
 

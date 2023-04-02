@@ -74,7 +74,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public double getDroneBatteryLevel(String serialNumber) throws Exception {
+    public int getDroneBatteryLevel(String serialNumber) throws Exception {
         Drone drone = droneRepository.findBySerialNumber(serialNumber)
                 .orElseThrow(() -> new Exception("Drone not found with serialNumber: " + serialNumber));
 

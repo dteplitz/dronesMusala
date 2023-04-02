@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 @RestController
 @RequestMapping("/drones")
 public class DroneController {
@@ -28,7 +26,7 @@ public class DroneController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerDrone(@RequestBody DroneDTO drone) throws Exception {
+    public ResponseEntity<?> registerDrone(@RequestBody DroneDTO drone) {
         try{
             Drone registeredDrone = droneService.saveDrone(drone);
             return ResponseEntity.ok(registeredDrone);
@@ -39,7 +37,7 @@ public class DroneController {
     }
 
     @PostMapping("/{medicationCode}/{droneSerialNumber}/add-medication")
-    public ResponseEntity<?> addMedicationToDrone(@PathVariable String medicationCode,@PathVariable String droneSerialNumber) throws Exception {
+    public ResponseEntity<?> addMedicationToDrone(@PathVariable String medicationCode,@PathVariable String droneSerialNumber) {
         try{
             Drone drone = droneService.addMedicationToDrone(medicationCode, droneSerialNumber);
             return ResponseEntity.ok(drone);
@@ -51,7 +49,7 @@ public class DroneController {
     }
 
     @GetMapping("/{serialNumber}/loaded-medications")
-    public ResponseEntity<?> getLoadedMedications(@PathVariable String serialNumber) throws Exception {
+    public ResponseEntity<?> getLoadedMedications(@PathVariable String serialNumber) {
         try{
             List<Medication> loadedMedications = droneService.getLoadedMedications(serialNumber);
             return ResponseEntity.ok(loadedMedications);
@@ -63,13 +61,23 @@ public class DroneController {
 
     @GetMapping("/available-for-loading")
     public ResponseEntity<?> getAvailableDronesForLoading() {
-        List<Drone> availableDrones = droneService.getDronesByState(DroneState.IDLE);
-        return ResponseEntity.ok(availableDrones);
+        try{
+            List<Drone> availableDrones = droneService.getDronesByState(DroneState.IDLE);
+            return ResponseEntity.ok(availableDrones);
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
-/*
     @GetMapping("/{serialNumber}/battery-level")
-    public ResponseEntity<?> getDroneBatteryLevel(@PathVariable String serialNumber) throws DroneNotFoundException {
-        double batteryLevel = droneService.getDroneBatteryLevel(serialNumber);
-        return ResponseEntity.ok(batteryLevel);
-    }*/
+    public ResponseEntity<?> getDroneBatteryLevel(@PathVariable String serialNumber) {
+        try{
+            int batteryLevel = droneService.getDroneBatteryLevel(serialNumber);
+            return ResponseEntity.ok("Battery level is "+batteryLevel+"%");
+        }
+        catch (Exception e){
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //ToDo: change state when loading, set state of drone, another one to lower battery and charge battery
 }
