@@ -1,7 +1,6 @@
 package com.example.dronesv2.repository;
 
 import com.example.dronesv2.model.BatteryLog;
-import com.example.dronesv2.model.Drone;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -11,13 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
-public class JpaBatteryyLogRepository implements BatteryLogRepository{
+public class JpaBatteryLogRepository implements BatteryLogRepository{
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -79,6 +79,7 @@ public class JpaBatteryyLogRepository implements BatteryLogRepository{
 
     }
 
+    @Transactional
     @Override
     public BatteryLog save(BatteryLog batteryLog) {
         entityManager.persist(batteryLog);
