@@ -80,4 +80,5 @@ public class DroneController {
         }
     }
     //ToDo: change state when loading, set state of drone, another one to lower battery and charge battery
+    //put de drones y medicaciones
 }
